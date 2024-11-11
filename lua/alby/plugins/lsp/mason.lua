@@ -36,6 +36,7 @@ return {
 				"graphql",
 				"emmet_ls",
 				"prismals",
+				"eslint",
 			},
 		})
 
@@ -43,6 +44,7 @@ return {
 			ensure_installed = {
 				"prettier", -- prettier formatter
 				"stylua", -- lua formatter
+				"prettier",
 				"eslint_d", -- js linter
 			},
 		})
