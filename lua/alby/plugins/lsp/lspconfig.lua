@@ -36,8 +36,74 @@ return {
 			group = vim.api.nvim_create_augroup("UserLspConfig", {}),
 			callback = function(ev)
 				local opts = { buffer = ev.buf, silent = true }
+				keymap.set(
+					"n",
+					"gR",
+					"<cmd>Telescope lsp_references<CR>",
+					vim.tbl_extend("force", opts, { desc = "Show LSP references" })
+				)
 				keymap.set("n", "gd", "<cmd>Telescope lsp_definitions<CR>", opts)
-				-- …tutti gli altri…
+				keymap.set(
+					"n",
+					"gD",
+					vim.lsp.buf.declaration,
+					vim.tbl_extend("force", opts, { desc = "Go to declaration" })
+				)
+				keymap.set(
+					"n",
+					"gi",
+					"<cmd>Telescope lsp_implementations<CR>",
+					vim.tbl_extend("force", opts, { desc = "Show LSP implementations" })
+				)
+				keymap.set(
+					"n",
+					"gt",
+					"<cmd>Telescope lsp_type_definitions<CR>",
+					vim.tbl_extend("force", opts, { desc = "Show LSP type definitions" })
+				)
+				keymap.set(
+					{ "n", "v" },
+					"<leader>ca",
+					vim.lsp.buf.code_action,
+					vim.tbl_extend("force", opts, { desc = "See code actions" })
+				)
+				keymap.set(
+					"n",
+					"<leader>rn",
+					vim.lsp.buf.rename,
+					vim.tbl_extend("force", opts, { desc = "Smart rename" })
+				)
+				keymap.set(
+					"n",
+					"<leader>D",
+					"<cmd>Telescope diagnostics bufnr=0<CR>",
+					vim.tbl_extend("force", opts, { desc = "Buffer diagnostics" })
+				)
+				keymap.set(
+					"n",
+					"<leader>d",
+					vim.diagnostic.open_float,
+					vim.tbl_extend("force", opts, { desc = "Line diagnostics" })
+				)
+				keymap.set(
+					"n",
+					"[d",
+					vim.diagnostic.goto_prev,
+					vim.tbl_extend("force", opts, { desc = "Prev diagnostic" })
+				)
+				keymap.set(
+					"n",
+					"]d",
+					vim.diagnostic.goto_next,
+					vim.tbl_extend("force", opts, { desc = "Next diagnostic" })
+				)
+				keymap.set("n", "K", vim.lsp.buf.hover, vim.tbl_extend("force", opts, { desc = "Hover doc" }))
+				keymap.set(
+					"n",
+					"<leader>rs",
+					":LspRestart<CR>",
+					vim.tbl_extend("force", opts, { desc = "Restart LSP" })
+				)
 			end,
 		})
 
