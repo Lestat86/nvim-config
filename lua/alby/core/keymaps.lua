@@ -30,3 +30,21 @@ keymap.set("n", "<leader>tx", "<cmd>tabclose<CR>", { desc = "Close current tab" 
 keymap.set("n", "<leader>tn", "<cmd>tabn<CR>", { desc = "Go to next tab" }) --  go to next tab
 keymap.set("n", "<leader>tp", "<cmd>tabp<CR>", { desc = "Go to previous tab" }) --  go to previous tab
 keymap.set("n", "<leader>tf", "<cmd>tabnew %<CR>", { desc = "Open current buffer in new tab" }) --  move current buffer to new tab
+
+-- find and replace under the cursor
+keymap.set("v", "<Leader>sm", function()
+	-- Copia la selezione visiva nel registro x
+	vim.cmd('normal! "xy')
+
+	-- Ottiene il contenuto del registro x
+	local selection = vim.fn.getreg("x")
+
+	-- Apre il comando :substitute con il pattern selezionato
+	-- Aggiungendo il comando `:substitute` per lavorare su tutte le occorrenze
+	vim.api.nvim_feedkeys(":" .. "%s/" .. vim.fn.escape(selection, "/") .. "/", "n", true)
+end, { desc = "Start :substitute with selected text in visual mode" })
+
+-- Muscle memory is a biatch
+vim.keymap.set("n", "<C-s>", ":w<CR>", { desc = "Save current file" }) -- save file in normal mode
+vim.keymap.set("i", "<C-s>", "<Esc>:w<CR>", { desc = "Save current file" }) -- save file in insert mode
+vim.keymap.set("v", "<C-s>", "<Esc>:w<CR>gv", { desc = "Save current file" }) -- save file in visual mode

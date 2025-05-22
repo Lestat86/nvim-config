@@ -6,10 +6,10 @@ return {
 
 		conform.setup({
 			formatters_by_ft = {
-				-- javascript = { lsp_format = "prefer" },
-				-- typescript = { lsp_format = "prefer" },
-				-- javascriptreact = { lsp_format = "prefer" },
-				-- typescriptreact = { lsp_format = "prefer" },
+				javascript = { "eslint_d" },
+				typescript = { "eslint_d" },
+				javascriptreact = { "eslint_d" },
+				typescriptreact = { "eslint_d" },
 				svelte = { "prettier" },
 				css = { "prettier" },
 				html = { "prettier" },
