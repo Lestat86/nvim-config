@@ -42,3 +42,10 @@ opt.splitbelow = true -- split horizontal window to the bottom
 
 -- turn off swapfile
 opt.swapfile = false
+opt.termguicolors = true
+-- Evita testo sfocato nei popup
+opt.guifont = "FiraCode Nerd Font:h13"
+
+-- Se usi trasparenze in WezTerm
+opt.winblend = 0
+opt.pumblend = 0
