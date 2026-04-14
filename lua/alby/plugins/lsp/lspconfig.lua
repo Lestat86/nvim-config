@@ -8,15 +8,7 @@ return {
 		{
 			"mason-org/mason-lspconfig.nvim",
 			opts = {
-				ensure_installed = {
-					"pyright",
-					"lua_ls",
-					"tsserver",
-					"svelte",
-					"graphql",
-					"emmet_ls",
-				},
-				automatic_enable = true,
+				automatic_enable = false,
 			},
 			dependencies = {
 				"neovim/nvim-lspconfig",
@@ -140,7 +132,7 @@ return {
 			},
 		})
 
-		vim.lsp.config("tsserver", { capabilities = cmp_cap })
+		vim.lsp.config("ts_ls", { capabilities = cmp_cap })
 		vim.lsp.config("svelte", {
 			capabilities = cmp_cap,
 			on_attach = function(client)
@@ -159,6 +151,21 @@ return {
 		vim.lsp.config("emmet_ls", {
 			capabilities = cmp_cap,
 			filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less", "svelte" },
+		})
+
+		-- 5) Enable servers directly (bypasses mason-lspconfig timing bug)
+		vim.lsp.enable({
+			"ts_ls",
+			"html",
+			"cssls",
+			"tailwindcss",
+			"svelte",
+			"lua_ls",
+			"graphql",
+			"emmet_ls",
+			"prismals",
+			"pyright",
+			"eslint",
 		})
 	end,
 }
