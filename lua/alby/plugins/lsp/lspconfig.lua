@@ -153,6 +153,24 @@ return {
 			filetypes = { "html", "typescriptreact", "javascriptreact", "css", "sass", "scss", "less", "svelte" },
 		})
 
+		-- ESLint: use LspEslintFixAll on save (fast, in-memory, eslint is the ONLY formatter for JS/TS)
+		local eslint_base_on_attach = vim.lsp.config.eslint and vim.lsp.config.eslint.on_attach
+		vim.lsp.config("eslint", {
+			capabilities = cmp_cap,
+			settings = {
+				run = "onSave",
+			},
+			on_attach = function(client, bufnr)
+				if eslint_base_on_attach then
+					eslint_base_on_attach(client, bufnr)
+				end
+				vim.api.nvim_create_autocmd("BufWritePre", {
+					buffer = bufnr,
+					command = "LspEslintFixAll",
+				})
+			end,
+		})
+
 		-- 5) Enable servers directly (bypasses mason-lspconfig timing bug)
 		vim.lsp.enable({
 			"ts_ls",

@@ -6,10 +6,6 @@ return {
 
 		conform.setup({
 			formatters_by_ft = {
-				javascript = { "eslint_d" },
-				typescript = { "eslint_d" },
-				javascriptreact = { "eslint_d" },
-				typescriptreact = { "eslint_d" },
 				svelte = { "prettier" },
 				css = { "prettier" },
 				html = { "prettier" },
@@ -20,11 +16,18 @@ return {
 				liquid = { "prettier" },
 				lua = { "stylua" },
 			},
-			format_on_save = {
-				lsp_format = "fallback",
-				async = false,
-				timeout_ms = 1000,
-			},
+			format_on_save = function(bufnr)
+				-- JS/TS files are formatted by ESLint LSP via LspEslintFixAll (see lspconfig.lua)
+				local ft = vim.bo[bufnr].filetype
+				if ft == "javascript" or ft == "typescript" or ft == "javascriptreact" or ft == "typescriptreact" then
+					return false
+				end
+				return {
+					lsp_format = "fallback",
+					async = false,
+					timeout_ms = 1000,
+				}
+			end,
 		})
 
 		vim.keymap.set({ "n", "v" }, "<leader>mp", function()
