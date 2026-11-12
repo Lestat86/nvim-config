@@ -31,6 +31,12 @@ keymap.set("n", "<leader>tn", "<cmd>tabn<CR>", { desc = "Go to next tab" }) --  
 keymap.set("n", "<leader>tp", "<cmd>tabp<CR>", { desc = "Go to previous tab" }) --  go to previous tab
 keymap.set("n", "<leader>tf", "<cmd>tabnew %<CR>", { desc = "Open current buffer in new tab" }) --  move current buffer to new tab
 
+-- undotree nativo di nvim 0.12 (si carica al primo uso; nel pannello, muovere il cursore cambia stato)
+keymap.set("n", "<leader>u", function()
+	vim.cmd.packadd("nvim.undotree")
+	require("undotree").open()
+end, { desc = "Toggle undotree" })
+
 -- find and replace under the cursor
 keymap.set("v", "<Leader>sm", function()
 	-- Copia la selezione visiva nel registro x

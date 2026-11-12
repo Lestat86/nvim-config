@@ -40,6 +40,9 @@ opt.splitbelow = true -- split horizontal window to the bottom
 -- turn off swapfile
 opt.swapfile = false
 
+-- undo persistente: lo storico resta salvato su disco (~/.local/state/nvim/undo)
+opt.undofile = true
+
 -- Se usi trasparenze in WezTerm
 opt.winblend = 0
 opt.pumblend = 0
