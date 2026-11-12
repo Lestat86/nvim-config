@@ -1,14 +1,12 @@
+-- Unico punto di configurazione di mason (installatore di LSP, formatter, linter)
 return {
-	"williamboman/mason.nvim",
+	"mason-org/mason.nvim",
 	dependencies = {
-		"williamboman/mason-lspconfig.nvim",
-		"whoIsSethDaniel/mason-tool-installer.nvim",
+		"mason-org/mason-lspconfig.nvim",
+		"WhoIsSethDaniel/mason-tool-installer.nvim",
 	},
 	config = function()
-		local mason = require("mason")
-		local mason_tool_installer = require("mason-tool-installer")
-
-		mason.setup({
+		require("mason").setup({
 			ui = {
 				icons = {
 					package_installed = "✓",
@@ -18,7 +16,14 @@ return {
 			},
 		})
 
-		mason_tool_installer.setup({
+		-- serve a mason-tool-installer per tradurre i nomi lspconfig (ts_ls)
+		-- nei pacchetti mason (typescript-language-server).
+		-- I server li abilita lspconfig.lua con vim.lsp.enable, non mason.
+		require("mason-lspconfig").setup({
+			automatic_enable = false,
+		})
+
+		require("mason-tool-installer").setup({
 			ensure_installed = {
 				-- lsp servers
 				"ts_ls",
@@ -32,10 +37,11 @@ return {
 				"prismals",
 				"pyright",
 				"eslint",
-				-- formatters & linters
+				-- formatters
 				"prettier",
 				"stylua",
-				"eslint_d",
+				-- altro
+				"tree-sitter-cli", -- richiesta da nvim-treesitter (branch main)
 			},
 		})
 	end,

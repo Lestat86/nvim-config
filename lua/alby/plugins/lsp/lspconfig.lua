@@ -2,21 +2,10 @@ return {
 	"neovim/nvim-lspconfig",
 	event = { "BufReadPre", "BufNewFile" },
 	dependencies = {
-		-- Mason core
-		{ "williamboman/mason.nvim", config = true },
-		-- Bridges Mason <-> LSPConfig
-		{
-			"mason-org/mason-lspconfig.nvim",
-			opts = {
-				automatic_enable = false,
-			},
-			dependencies = {
-				"neovim/nvim-lspconfig",
-			},
-		},
+		-- mason si configura in lsp/mason.lua: qui serve solo che sia caricato prima
+		"mason-org/mason.nvim",
 		"hrsh7th/cmp-nvim-lsp",
 		{ "antosha417/nvim-lsp-file-operations", config = true },
-		{ "folke/neodev.nvim", opts = {} },
 	},
 	config = function()
 		-- 1) Import
@@ -77,18 +66,12 @@ return {
 					vim.diagnostic.open_float,
 					vim.tbl_extend("force", opts, { desc = "Line diagnostics" })
 				)
-				keymap.set(
-					"n",
-					"[d",
-					vim.diagnostic.goto_prev,
-					vim.tbl_extend("force", opts, { desc = "Prev diagnostic" })
-				)
-				keymap.set(
-					"n",
-					"]d",
-					vim.diagnostic.goto_next,
-					vim.tbl_extend("force", opts, { desc = "Next diagnostic" })
-				)
+				keymap.set("n", "[d", function()
+					vim.diagnostic.jump({ count = -1, float = true })
+				end, vim.tbl_extend("force", opts, { desc = "Prev diagnostic" }))
+				keymap.set("n", "]d", function()
+					vim.diagnostic.jump({ count = 1, float = true })
+				end, vim.tbl_extend("force", opts, { desc = "Next diagnostic" }))
 				keymap.set("n", "K", vim.lsp.buf.hover, vim.tbl_extend("force", opts, { desc = "Hover doc" }))
 				keymap.set(
 					"n",
@@ -99,18 +82,21 @@ return {
 			end,
 		})
 
-		-- 3) Set diagnostic signs
-		for type, icon in pairs({ Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }) do
-			vim.fn.sign_define("DiagnosticSign" .. type, { text = icon, texthl = "DiagnosticSign" .. type })
-		end
-
+		-- 3) Diagnostic signs + virtual text
 		vim.diagnostic.config({
 			virtual_text = {
 				prefix = "●", -- simbolo davanti al messaggio
 				spacing = 2, -- spazio tra codice e testo
 				-- show = "first",-- opzionale: mostra solo il primo messaggio per linea
 			},
-			signs = true, -- lascia i segni in gutter
+			signs = {
+				text = {
+					[vim.diagnostic.severity.ERROR] = " ",
+					[vim.diagnostic.severity.WARN] = " ",
+					[vim.diagnostic.severity.HINT] = "󰠠 ",
+					[vim.diagnostic.severity.INFO] = " ",
+				},
+			},
 			underline = true, -- mantieni la sottolineatura
 			update_in_insert = false, -- non aggiornare durante l’inserimento
 			severity_sort = false,
@@ -146,7 +132,7 @@ return {
 		})
 		vim.lsp.config("graphql", {
 			capabilities = cmp_cap,
-			filetypes = { "graphql", "gql", "svelte", "typescriptreact", "javascriptreact" },
+			filetypes = { "graphql", "svelte", "typescriptreact", "javascriptreact" },
 		})
 		vim.lsp.config("emmet_ls", {
 			capabilities = cmp_cap,

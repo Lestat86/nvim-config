@@ -1,17 +1,25 @@
+-- Colora i codici colore con il colore che rappresentano.
+-- catgoose/nvim-colorizer.lua è il fork mantenuto dell'originale di norcalli.
+local filetypes = { "css", "scss", "html", "javascript", "typescript", "lua", "json", "yaml" }
+
 return {
-	"norcalli/nvim-colorizer.lua",
-	ft = { "css", "scss", "html", "javascript", "typescript", "lua", "json", "yaml" },
+	"catgoose/nvim-colorizer.lua",
+	ft = filetypes,
 	opts = {
-		-- attiva tutti i formati esadecimali (#RGB, #RRGGBB, #AARRGGBB)
-		RGB = true, -- #RGB e #RRGGBB
-		RRGGBB = true, -- #RRGGBB
-		AARRGGBB = true, -- #AARRGGBB
-		-- opzioni extra
-		names = false, -- nomi CSS (es. “red”)
-		tailwind = false, -- classi Tailwind
-		mode = "background", -- evidenzia via background
+		filetypes = filetypes,
+		options = {
+			parsers = {
+				names = { enable = false }, -- nomi CSS (es. "red")
+				hex = {
+					rgb = true, -- #RGB
+					rrggbb = true, -- #RRGGBB
+					hash_aarrggbb = true, -- #AARRGGBB
+				},
+				tailwind = { enable = false }, -- classi Tailwind
+			},
+			display = {
+				mode = "background", -- evidenzia via background
+			},
+		},
 	},
-	config = function(_, opts)
-		require("colorizer").setup(opts.ft, opts)
-	end,
 }

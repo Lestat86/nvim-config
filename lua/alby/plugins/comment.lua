@@ -1,19 +1,25 @@
+-- Commenti: si usa il commento nativo di nvim (gc / gcc / gc{movimento}).
+-- Questo plugin sceglie la sintassi giusta in base al punto del file
+-- (es. `{/* */}` dentro JSX, `<!-- -->` nell'html di uno .svelte).
 return {
-  "numToStr/Comment.nvim",
-  event = { "BufReadPre", "BufNewFile" },
-  dependencies = {
-    "JoosepAlviste/nvim-ts-context-commentstring",
-  },
-  config = function()
-    -- import comment plugin safely
-    local comment = require("Comment")
+	"JoosepAlviste/nvim-ts-context-commentstring",
+	event = { "BufReadPre", "BufNewFile" },
+	opts = {
+		enable_autocmd = false,
+	},
+	init = function()
+		vim.g.skip_ts_context_commentstring_module = true
+	end,
+	config = function(_, opts)
+		require("ts_context_commentstring").setup(opts)
 
-    local ts_context_commentstring = require("ts_context_commentstring.integrations.comment_nvim")
-
-    -- enable comment
-    comment.setup({
-      -- for commenting tsx, jsx, svelte, html files
-      pre_hook = ts_context_commentstring.create_pre_hook(),
-    })
-  end,
+		-- integrazione con il commento nativo (gc)
+		local get_option = vim.filetype.get_option
+		---@diagnostic disable-next-line: duplicate-set-field
+		vim.filetype.get_option = function(filetype, option)
+			return option == "commentstring"
+					and require("ts_context_commentstring.internal").calculate_commentstring()
+				or get_option(filetype, option)
+		end
+	end,
 }
